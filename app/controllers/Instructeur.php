@@ -53,53 +53,72 @@ class Instructeur extends BaseController
 
     public function gebruikteVoertuigen($instructeurId)
     {
-        /**
-         * Haal de info van de instructeur op uit de database (model)
-         */
-        $infoInstructeur = $this->instructeurModel->getGegevensInstructeur();
 
-        // var_dump($infoInstructeur);
-        // $aantalSterren = sizeof($);
+        // Haal de info van de instructeur op uit de database (model)
+
+        $instructeur = $this->instructeurModel->getInstructeurInfoById($instructeurId);
+
+        // var_dump($instructeur);
+
+        //opgalen toegewezen voerthuigen
+        $assignedVehicles = $this->instructeurModel->getAssignedVehiclesToInstructor($instructeurId);
+
+        // var_dump($assignedVehicles);       // $aantalSterren = sizeof($);
+
+        $tableRows = "";
+
+        foreach ($assignedVehicles as $vehicles) {
+            $date = date_format(date_create($vehicles->Bouwjaar), 'd-m-Y');
+            $tableRows .= "<tr>
+                                <td>$vehicles->TypeVoertuig</td>
+                                <td>$vehicles->Type</td>
+                                <td>$vehicles->Kenteken</td>
+                                <td>$vehicles->Bouwjaar</td>
+                                <td>$vehicles->Brandstof</td>
+                                <td>$vehicles->Rijbewijscategorie</td>
+                            </tr>";
+        }
+    
 
         /**
          * Maak de rows voor de tbody in de view
          */
-        $tableRows = '';
+        // $tableRows = '';
 
-        foreach ($infoInstructeur as $info) {
-            $datum = date_create($info->Bouwjaar);
-            $datum = date_format($datum, 'd-m-Y'); 
-            $tableRows .=  "<tr>
-                                <td>$info->typeVoertuig</td>
-                                <td>$info->Type</td>
-                                <td>$info->Kenteken</td>
-                                <td>$datum</td>
-                                <td>$info->Brandstof</td>
-                                <td>$info->RijbewijsCategorie</td>
-                            </tr>";
-        }
+        // foreach ($infoInstructeur as $info) {
+        //     $datum = date_create($info->Bouwjaar);
+        //     $datum = date_format($datum, 'd-m-Y'); 
+        //     $tableRows .=  "<tr>
+        //                         <td>$info->typeVoertuig</td>
+        //                         <td>$info->Type</td>
+        //                         <td>$info->Kenteken</td>
+        //                         <td>$datum</td>
+        //                         <td>$info->Brandstof</td>
+        //                         <td>$info->RijbewijsCategorie</td>
+        //                     </tr>";
+        // }
 
-        $naamDatumSterren = $this->instructeurModel->getLizhan();
+        // $naamDatumSterren = $this->instructeurModel->getLizhan();
 
-        $nds = '';
+        // $nds = '';
 
-        foreach ($naamDatumSterren as $naam) {
-            $datum = date_create($naam->DatumInDienst);
-            $datum = date_format($datum, 'd-m-Y'); 
-            $aantalSterren =    $naam->AantalSterren;
-            $voor =             $naam->Voornaam;
-            $tussen =           $naam->Tussenvoegsel;
-            $achter =           $naam->Achternaam;
-        }
+        // foreach ($naamDatumSterren as $naam) {
+        //     $datum = date_create($naam->DatumInDienst);
+        //     $datum = date_format($datum, 'd-m-Y'); 
+        //     $aantalSterren =    $naam->AantalSterren;
+        //     $voor =             $naam->Voornaam;
+        //     $tussen =           $naam->Tussenvoegsel;
+        //     $achter =           $naam->Achternaam;
+        // }
 
         $data = [
             'title'         => 'Door instructeur gebruikte voertuigen',
-            'tableRows'     => $tableRows,
-            'datum'         => $datum,
-            'aantalSterren' => $aantalSterren,
-            'voor'          => $voor,
-            'tussen'        => $tussen, 
-            'achter'        => $achter
+            'voornaam'      => $instructeur->Voornaam,
+            'tussenvoegsel' => $instructeur->Tussenvoegsel,
+            'achternaam'    => $instructeur->Achternaam,
+            'datumInDienst'    => $instructeur->DatumInDienst,
+            'aantalSterren' => $instructeur->Aantalsterren,
+            'tableRows' => $tableRows
         ];
         $this->view('Instructeur/gebruikteVoertuigen', $data);
     }
