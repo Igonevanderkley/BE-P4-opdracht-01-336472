@@ -1,13 +1,13 @@
 <?php
 
-class Instructeur extends BaseController 
+class Instructeur extends BaseController
 {
     private $instructeurModel;
     public function __construct()
     {
         $this->instructeurModel = $this->model('InstructeurModel');
     }
-    public function index() 
+    public function index()
     {
         /**
          * Haal alle instructeurs op uit de database (model)
@@ -24,7 +24,7 @@ class Instructeur extends BaseController
 
         foreach ($instructeurs as $instructeur) {
             $datum = date_create($instructeur->DatumInDienst);
-            $datum = date_format($datum, 'd-m-Y'); 
+            $datum = date_format($datum, 'd-m-Y');
             $tableRows .=  "<tr>
                                 <td>$instructeur->Voornaam</td>
                                 <td>$instructeur->Tussenvoegsel</td>
@@ -33,17 +33,17 @@ class Instructeur extends BaseController
                                 <td>$datum</td>
                                 <td>$instructeur->AantalSterren</td>
                                 <td>
-                                    <a href='". URLROOT . "/Instructeur/gebruikteVoertuigen/$instructeur->Id'>
+                                    <a href='" . URLROOT . "/Instructeur/gebruikteVoertuigen/$instructeur->Id'>
                                     <i class='bi bi-car-front'></i>
                                 </td>
                             </tr>";
         }
-        
+
         /**
          * Het $data-array geeft alle belangrijke info door aan de view
          */
         $data = [
-            'title' => 'Instructeurs in dienst', 
+            'title' => 'Instructeurs in dienst',
             'aantalInstructeurs' => $aantalInstructeurs,
             'tableRows' => $tableRows
         ];
@@ -78,7 +78,7 @@ class Instructeur extends BaseController
                                 <td>$vehicles->Rijbewijscategorie</td>
                             </tr>";
         }
-    
+
 
         /**
          * Maak de rows voor de tbody in de view
